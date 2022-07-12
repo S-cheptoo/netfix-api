@@ -7,7 +7,7 @@ const verify = require("../verifyToken");
 //UPDATE
 router.put("/:id", verify, async (req, res) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
-        //checck if there is  a password
+        //check if there is  a password
         if (req.body.password) {
             req.body.password = CryptoJS.AES.encrypt(
                 req.body.password,
@@ -16,7 +16,7 @@ router.put("/:id", verify, async (req, res) => {
         }
 
         try {
-            const updatedUser = await User.findByIdAndUpdate(rwe.params.id, {
+            const updatedUser = await User.findByIdAndUpdate(req.params.id, {
                 $set: req.body,
             },
                 {new: true}
@@ -35,7 +35,7 @@ router.put("/:id", verify, async (req, res) => {
 router.delete("/:id", verify, async (req, res) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
         try {
-            await User.findByIdAndDelete(req.paramsms.id);
+            await User.findByIdAndDelete(req.params.id);
             res.status(200).json("User has been deleted..");
         }
         catch (err) {
@@ -49,7 +49,7 @@ router.delete("/:id", verify, async (req, res) => {
 //GET
 router.get("/find/:id", verify, async (req, res) => {
     try {
-        const user = await User.findById(req.paramsms.id);
+        const user = await User.findById(req.params.id);
         const { password, ...info } = user._doc;
         res.status(200).json(info);
     }
